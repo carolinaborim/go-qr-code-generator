@@ -1,6 +1,6 @@
-#### This project is a collaboration between Carolina and Abdallah
-* carolina.borim@hashicorp.com
+#### This project is a collaboration between Abdallah and Carolina
 * abdallah.hodieb@hashicorp.com
+* carolina.borim@hashicorp.com
 
 
 ## TODO
