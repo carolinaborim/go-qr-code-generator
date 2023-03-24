@@ -1,12 +1,12 @@
 package main
 
 import (
+	"fmt"
 	qrcode "github.com/skip2/go-qrcode"
 	"os"
 	//"github.com/makiuchi-d/gozxing"
 	//"github.com/makiuchi-d/gozxing/oned"
 )
-import "fmt"
 
 func main() {
 	fmt.Println(os.Args)
