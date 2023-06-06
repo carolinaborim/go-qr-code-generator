@@ -1,35 +1,49 @@
 package main
 
 import (
+	"flag"
 	"fmt"
-	qrcode "github.com/skip2/go-qrcode"
+	"github.com/skip2/go-qrcode"
+	"log"
 	"os"
-	//"github.com/makiuchi-d/gozxing"
-	//"github.com/makiuchi-d/gozxing/oned"
 )
 
 func main() {
-	fmt.Println(os.Args)
-	if len(os.Args) < 3 {
-		panic("need url and file output")
-	}
-
-	url := os.Args[1]
-	output := os.Args[2]
-
-	err := qrcode.WriteFile(url, qrcode.Medium, 256, output)
+	args, err := parseArgs(os.Args)
 	if err != nil {
-		panic(err)
+		log.Fatalf("Parse args failed, %v", err)
 	}
 
-	// Another library that will be used for reading QR codes.
-	//enc := oned.NewCode128Writer()
-	//img, _ := enc.Encode(url, gozxing.BarcodeFormat_QR_CODE BarcodeFormat_CODE_128, 250, 50, nil)
-	//
-	//file, _ := os.Create(output)
-	//defer file.Close()
-	//
-	//// *BitMatrix implements the image.Image interface,
-	//// so it is able to be passed to png.Encode directly.
-	//_ = png.Encode(file, img)
+	if err := generateQRCode(args.Url, args.OutputPath); err != nil {
+		log.Fatalf("Generating qr failed, %v", err)
+	}
+}
+
+type ParsedArgs struct {
+	Url        string
+	OutputPath string
+}
+
+func parseArgs(args []string) (ParsedArgs, error) {
+	var url string
+	var output string
+
+	if len(args) < 1 {
+		return ParsedArgs{}, fmt.Errorf("no args were passed")
+	}
+
+	cli := flag.NewFlagSet(os.Args[0], flag.ExitOnError)
+	cli.SetOutput(os.Stdout)
+	cli.StringVar(&url, "url", "", "url for qr-code")
+	cli.StringVar(&url, "u", "", "url for qr-code")
+
+	cli.StringVar(&output, "output", "", "output file")
+	cli.StringVar(&output, "o", "", "output file")
+	err := cli.Parse(args[1:])
+
+	return ParsedArgs{Url: url, OutputPath: output}, err
+}
+
+func generateQRCode(url string, output string) error {
+	return qrcode.WriteFile(url, qrcode.Medium, 256, output)
 }
