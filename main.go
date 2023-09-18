@@ -3,9 +3,10 @@ package main
 import (
 	"flag"
 	"fmt"
-	"github.com/skip2/go-qrcode"
 	"log"
 	"os"
+
+	"github.com/carolinaborim/go-qr-code-generator/qr"
 )
 
 func main() {
@@ -14,12 +15,18 @@ func main() {
 		log.Fatalf("Parse args failed, %v", err)
 	}
 
-	if err := generateQRCode(args.Url, args.OutputPath); err != nil {
+	if args.ServerMode {
+		runServer()
+		return
+	}
+
+	if err := qr.EncodeUrlToFile(args.Url, args.OutputPath); err != nil {
 		log.Fatalf("Generating qr failed, %v", err)
 	}
 }
 
 type ParsedArgs struct {
+	ServerMode bool
 	Url        string
 	OutputPath string
 }
@@ -27,6 +34,7 @@ type ParsedArgs struct {
 func parseArgs(args []string) (ParsedArgs, error) {
 	var url string
 	var output string
+	var serverMode bool
 
 	if len(args) < 1 {
 		return ParsedArgs{}, fmt.Errorf("no args were passed")
@@ -39,11 +47,10 @@ func parseArgs(args []string) (ParsedArgs, error) {
 
 	cli.StringVar(&output, "output", "", "output file")
 	cli.StringVar(&output, "o", "", "output file")
+
+	cli.BoolVar(&serverMode, "server", false, "run qr cli in server mode")
+
 	err := cli.Parse(args[1:])
 
-	return ParsedArgs{Url: url, OutputPath: output}, err
-}
-
-func generateQRCode(url string, output string) error {
-	return qrcode.WriteFile(url, qrcode.Medium, 256, output)
+	return ParsedArgs{ServerMode: serverMode, Url: url, OutputPath: output}, err
 }
