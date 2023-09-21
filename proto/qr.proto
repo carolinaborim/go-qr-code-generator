@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package qr;
+
+import "Proto/google/api/annotations.proto";
+
+message GenerateQrRequest {
+  string url = 1;
+}
+
+message GenerateQrResponse {
+  bytes image = 1;
+}
+
+service QrGenerator {
+  rpc GenerateQr(GenerateQrRequest) returns (GenerateQrResponse) {
+    option (google.api.http) = {
+       get: "/v1/qr"
+     };
+  }
+}

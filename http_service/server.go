@@ -1,4 +1,4 @@
-package main
+package http_service
 
 import (
 	"encoding/json"
@@ -30,7 +30,7 @@ func handleError(w http.ResponseWriter, _ *http.Request, code int, payload map[s
 	_, _ = w.Write(jsonPayload)
 }
 
-func runServer() {
+func RunServer() {
 	log.Println("Running server, http://localhost:8090")
 	http.HandleFunc("/", handler)
 	http.ListenAndServe(":8090", nil)

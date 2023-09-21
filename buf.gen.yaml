@@ -1,0 +1,21 @@
+version: v1
+managed:
+  enabled: true
+  go_package_prefix:
+    default: github.com/carolinaborim/go-qr-code-generator/proto/gen
+plugins:
+  - plugin: buf.build/protocolbuffers/go
+    out: proto/gen
+    opt: paths=source_relative
+  - plugin: buf.build/connectrpc/go
+    out: proto/gen
+    opt: paths=source_relative
+  - plugin: go-grpc
+    out: proto/gen
+    opt:
+      - paths=source_relative
+  - plugin: grpc-gateway
+    out: proto/gen
+    opt:
+     - paths=source_relative
+     - generate_unbound_methods=true
